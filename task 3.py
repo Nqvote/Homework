@@ -1,0 +1,64 @@
+class CustomList:
+    def __init__(self, size):
+        if size <= 0:
+            raise ValueError("Размер списка должен быть положительным числом.")
+        self._list = [0] * size
+        self.size = size
+        self.write_count = 0
+        self.read_count = 0
+
+    def get_counters(self):
+        return {"write_count": self.write_count, "read_count": self.read_count}
+
+    def __getitem__(self, index):
+        if 0 <= index < self.size:
+            self.read_count += 1
+            return self._list[index]
+        else:
+            raise IndexError("Индекс выходит за границы списка.")
+
+    def __setitem__(self, index, value):
+        if 0 <= index < self.size:
+            if -100 <= value <= 100:
+                self._list[index] = value
+                self.write_count += 1
+            else:
+                raise ValueError("Значение должно быть в диапазоне от -100 до 100.")
+        else:
+            raise IndexError("Индекс выходит за границы списка.")
+
+    def append(self, value):
+        if -100 <= value <= 100:
+            self._list.append(value)
+            self.size += 1
+            self.write_count += 1
+        else:
+            raise ValueError("Значение должно быть в диапазоне от -100 до 100.")
+
+    def add(self, other):
+        max_size = max(self.size, other.size)
+        new_list = [0] * max_size
+
+        for i in range(max_size):
+            val1 = self._list[i] if i < self.size else 0
+            val2 = other._list[i] if i < other.size else 0
+            new_list[i] = val1 + val2
+
+        self._list = new_list
+        self.size = max_size
+
+    def subtract(self, other):
+        max_size = max(self.size, other.size)
+        new_list = [0] * max_size
+
+        for i in range(max_size):
+            val1 = self._list[i] if i < self.size else 0
+            val2 = other._list[i] if i < other.size else 0
+            new_list[i] = val1 - val2
+
+        self._list = new_list
+        self.size = max_size
+
+    def display(self):
+        """Выводит все значения списка."""
+        print(self._list)
